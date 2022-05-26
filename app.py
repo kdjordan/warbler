@@ -318,7 +318,7 @@ def homepage():
         user = User.query.get_or_404(g.user.id)
 
         followed = [u.id for u in user.following]
-        followed.append(user.id)
+        
         messages = (Message
                     .query
                     .filter(Message.user_id.in_(followed))
@@ -342,21 +342,24 @@ def like_mssg(message_id):
         flash("Access unauthorized.", "danger")
         return redirect("/")
     
-    user = User.query.get_or_404(g.user.id)
-    like = Likes.query.filter_by(message_id=message_id, user_id=user.id).first()
-    print('user is ', user) ##57
+    like = Likes.query.filter_by(message_id=message_id, user_id=g.user.id).first()    
+
+    ##check if like is own post
+    mssg = Message.query.get_or_404(message_id)
+    if g.user.id == mssg.user.id:
+        flash('Sorry - you can\'t like your own post :(', "danger")
+        return redirect(f'/users/{g.user.id}/likes')
 
     if like is None:
         like = Likes(user_id=g.user.id, message_id=message_id)
         db.session.add(like)
         db.session.commit()
     else :
-        print('likes********* ', message_id )
-        del_like = Likes.query.filter_by(message_id=message_id).first()
+        del_like = Likes.query.filter_by(message_id=like.message_id).first()
         db.session.delete(del_like)
         db.session.commit()
 
-    return redirect(f'/users/{user.id}/likes')
+    return redirect(f'/users/{g.user.id}/likes')
 
 
 @app.route('/users/<int:user_id>/likes')
@@ -376,7 +379,7 @@ def user_likes(user_id):
                     .order_by(Message.timestamp.desc())
                     .limit(100)
                     .all())
-
+### add flag or something for rendering liked cards with users image not personal profile image
         return render_template('users/show.html', messages=messages, user=user, likes=likes)
 
 ##############################################################################
