@@ -5,7 +5,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 
 from forms import UserAddForm, LoginForm, MessageForm, ProfileUpdateForm
-from models import db, connect_db, User, Message
+from models import db, connect_db, User, Message, Likes
 
 CURR_USER_KEY = "curr_user"
 
@@ -151,7 +151,9 @@ def users_show(user_id):
                 .order_by(Message.timestamp.desc())
                 .limit(100)
                 .all())
-    return render_template('users/show.html', user=user, messages=messages)
+
+    likes = Likes.query.filter_by(user_id=user_id).all()
+    return render_template('users/show.html', user=user, messages=messages, likes=likes)
 
 
 @app.route('/users/<int:user_id>/following')
@@ -251,7 +253,6 @@ def delete_user():
 
     return redirect("/signup")
 
-
 ##############################################################################
 # Messages routes:
 
@@ -317,19 +318,66 @@ def homepage():
         user = User.query.get_or_404(g.user.id)
 
         followed = [u.id for u in user.following]
-        
+        followed.append(user.id)
         messages = (Message
                     .query
                     .filter(Message.user_id.in_(followed))
                     .order_by(Message.timestamp.desc())
                     .limit(100)
                     .all())
-                    
+
         return render_template('home.html', messages=messages)
 
     else:
         return render_template('home-anon.html')
 
+
+##############################################################################
+### LIKES routineS
+
+@app.route('/users/add_like/<int:message_id>', methods=['POST'])
+def like_mssg(message_id):
+    """Add like to Likes table"""
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+    
+    user = User.query.get_or_404(g.user.id)
+    like = Likes.query.filter_by(message_id=message_id, user_id=user.id).first()
+    print('user is ', user) ##57
+
+    if like is None:
+        like = Likes(user_id=g.user.id, message_id=message_id)
+        db.session.add(like)
+        db.session.commit()
+    else :
+        print('likes********* ', message_id )
+        del_like = Likes.query.filter_by(message_id=message_id).first()
+        db.session.delete(del_like)
+        db.session.commit()
+
+    return redirect(f'/users/{user.id}/likes')
+
+
+@app.route('/users/<int:user_id>/likes')
+def user_likes(user_id):
+     if g.user:
+        
+        user = User.query.get_or_404(user_id)
+        
+        likes = Likes.query.filter_by(user_id=user.id).all()
+        
+        likes = [u.message_id for u in likes]
+        
+        
+        messages = (Message
+                    .query
+                    .filter(Message.id.in_(likes))
+                    .order_by(Message.timestamp.desc())
+                    .limit(100)
+                    .all())
+
+        return render_template('users/show.html', messages=messages, user=user, likes=likes)
 
 ##############################################################################
 # Turn off all caching in Flask
