@@ -140,6 +140,9 @@ def list_users():
 @app.route('/users/<int:user_id>')
 def users_show(user_id):
     """Show user profile."""
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
 
     user = User.query.get_or_404(user_id)
 
@@ -282,8 +285,13 @@ def messages_add():
 @app.route('/messages/<int:message_id>', methods=["GET"])
 def messages_show(message_id):
     """Show a message."""
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
 
     msg = Message.query.get(message_id)
+    if msg is None:
+        return redirect('/')
     return render_template('messages/show.html', message=msg)
 
 
