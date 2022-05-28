@@ -18,6 +18,7 @@ This is a Twitter clone called Warblerm where a user can sign up and create 'war
 * Postgres
 * SQLalchemy
 * Jinja2
+* WTForms
 	
 ## Setup
 To run this application run the following commands :
