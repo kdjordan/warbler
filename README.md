@@ -5,7 +5,7 @@
 * [Testing](#testing)
 
 ## General info
-This is a Twitter clone called Warblerm where a user can sign up and create 'warbles'. User can also like other user's Warbles and follow other users. Full test suit is included which tests both views and models.
+This is a Twitter clone called Warbler where a user can sign up and create 'warbles'. User can also like other user's Warbles and follow other users. Full test suit is included which tests both views and models.
 
 ![](warbler.gif)
 
