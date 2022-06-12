@@ -15,7 +15,7 @@ This is a Twitter clone called Warbler where a user can sign up and create 'warb
 * Python3
 * Flask
 * Bcrypt
-* Postgres
+* PostgreSQL
 * SQLalchemy
 * Jinja2
 * WTForms
