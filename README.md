@@ -24,11 +24,19 @@ This is a Twitter clone called Warbler where a user can sign up and create 'warb
 In order to run this application you must have a local instance of PostgreSQL running.
 To learn how to install PostgreSQL and run it locally you can visit : [PostgreSQL](https://www.postgresql.org/)
 
+
+
 To use this application locally, run the following commands :
 
 ```
 $ git clone https://github.com/kdjordan/warbler
 $ cd into warbler
+**Make sure PostgreSQL is installed and running on your machine**
+$ psql
+$ CREATE DATABASE warbler
+$ CREATE DARTABASE warbler_test
+$ \q
+$ python3 seed.py
 $ python3 -m venv venv
 $ source venv/bin/activate
 $ pip install -r requirements.txt
