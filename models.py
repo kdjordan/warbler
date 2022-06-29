@@ -1,10 +1,10 @@
 """SQLAlchemy models for Warbler."""
 
-from datetime import datetime, date
-from dateutil.tz import tzutc, tzlocal
-
+from datetime import datetime
+from dateutil import tz
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql import func
 
 bcrypt = Bcrypt()
 db = SQLAlchemy()
@@ -190,12 +190,12 @@ class Message(db.Model):
         db.String(140),
         nullable=False,
     )
-
+    
     timestamp = db.Column(
-        db.DateTime,
+        db.String,
         nullable=False,
-        default=datetime.utcnow(),
     )
+
     user_id = db.Column(
         db.Integer,
         db.ForeignKey('users.id', ondelete='CASCADE'),

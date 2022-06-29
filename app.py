@@ -3,7 +3,7 @@ import os
 from flask import Flask, render_template, request, flash, redirect, session, g
 # from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
-
+from datetime import datetime
 from forms import UserAddForm, LoginForm, MessageForm, ProfileUpdateForm
 from models import db, connect_db, User, Message, Likes
 
@@ -272,7 +272,10 @@ def messages_add():
     form = MessageForm()
 
     if form.validate_on_submit():
-        msg = Message(text=form.text.data)
+        print('adding post ', form.text.data)
+        time = datetime.now().astimezone()
+        print('time in ', time)
+        msg = Message(text=form.text.data, timestamp=time)
         g.user.messages.append(msg)
         db.session.commit()
 
