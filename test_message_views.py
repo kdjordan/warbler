@@ -7,7 +7,7 @@
 
 import os
 from unittest import TestCase
-
+from datetime import datetime
 from models import db, connect_db, Message, User
 
 # BEFORE we import our app, let's set an environmental variable
@@ -51,7 +51,7 @@ class MessageViewTestCase(TestCase):
                                     image_url=None)
         self.testuser_id = 8989
         self.testuser.id = self.testuser_id
-
+        self.time = datetime.now().astimezone()
         db.session.commit()
 
     def test_add_message(self):
@@ -67,7 +67,7 @@ class MessageViewTestCase(TestCase):
             # Now, that session setting is saved, so we can have
             # the rest of ours test
 
-            resp = c.post("/messages/new", data={"text": "Hello"})
+            resp = c.post("/messages/new", data={"text": "Hello", "timestamp": self.time})
 
             # Make sure it redirects
             self.assertEqual(resp.status_code, 302)
@@ -130,7 +130,8 @@ class MessageViewTestCase(TestCase):
         mssg = Message(
             id=1222,
             text= 'test text',
-            user_id= self.testuser.id
+            user_id= self.testuser.id,
+            timestamp=self.time
         )
         db.session.add(mssg)
         db.session.commit()
@@ -159,7 +160,8 @@ class MessageViewTestCase(TestCase):
         mssg = Message(
             id=1234,
             text= 'test text',
-            user_id= self.testuser.id
+            user_id= self.testuser.id,
+            timestamp=self.time
         )
         db.session.add(mssg)
         db.session.commit()
@@ -178,7 +180,8 @@ class MessageViewTestCase(TestCase):
         mssg = Message(
             id=1234,
             text= 'test text',
-            user_id= self.testuser.id
+            user_id= self.testuser.id,
+            timestamp=self.time
         )
         db.session.add(mssg)
         db.session.commit()

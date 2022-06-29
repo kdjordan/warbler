@@ -272,9 +272,7 @@ def messages_add():
     form = MessageForm()
 
     if form.validate_on_submit():
-        print('adding post ', form.text.data)
         time = datetime.now().astimezone()
-        print('time in ', time)
         msg = Message(text=form.text.data, timestamp=time)
         g.user.messages.append(msg)
         db.session.commit()

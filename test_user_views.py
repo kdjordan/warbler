@@ -7,7 +7,7 @@
 
 import os
 from unittest import TestCase
-
+from datetime import datetime
 from models import db, connect_db, Message, User, Likes, Follows
 from bs4 import BeautifulSoup
 
@@ -62,6 +62,8 @@ class MessageViewTestCase(TestCase):
         self.u3 = User.signup("hij", "test3@test.com", "password", None)
         self.u4 = User.signup("testing", "test4@test.com", "password", None)
 
+        self.time = datetime.now().astimezone()
+
         db.session.commit()
 
     def tearDown(self):
@@ -98,9 +100,9 @@ class MessageViewTestCase(TestCase):
 
     def setup_likes(self):
         """Setup likes for the following tests"""
-        m1 = Message(text='New Mssg', user_id=f'{self.testuser.id}')
-        m2 = Message(text='New Mssg2', user_id=f'{self.testuser.id}')
-        m3 = Message(id=9876, text="likable warble", user_id=self.u1_id)
+        m1 = Message(text='New Mssg', user_id=f'{self.testuser.id}', timestamp=self.time)
+        m2 = Message(text='New Mssg2', user_id=f'{self.testuser.id}', timestamp=self.time)
+        m3 = Message(id=9876, text="likable warble", user_id=self.u1_id, timestamp=self.time)
         db.session.add_all([m1,m2,m3])
         db.session.commit()
 
@@ -137,7 +139,7 @@ class MessageViewTestCase(TestCase):
 
 
     def test_add_like(self):
-        m = Message(id=1234, text="New test mssg", user_id=f'{self.u1_id}')
+        m = Message(id=1234, text="New test mssg", user_id=f'{self.u1_id}', timestamp=self.time)
         db.session.add(m)
         db.session.commit()
 
@@ -156,7 +158,7 @@ class MessageViewTestCase(TestCase):
     def test_remove_like(self):
         self.setup_likes()
 
-        m = Message(id=109, text="New test mssg", user_id=f'{self.u1_id}')
+        m = Message(id=109, text="New test mssg", user_id=f'{self.u1_id}', timestamp=self.time)
         db.session.add(m)
         db.session.commit()
 

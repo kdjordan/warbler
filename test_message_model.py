@@ -8,6 +8,7 @@
 import os
 from unittest import TestCase
 from sqlalchemy import exc
+from datetime import datetime
 
 from models import db, User, Message, Follows
 def echo(name):
@@ -44,12 +45,13 @@ class MessageModelTestCase(TestCase):
         uid1 = 1111
         u1.id = uid1
 
-        m1 = Message(text="test", timestamp=None, user_id=1111)
+        time = datetime.now().astimezone()
+        m1 = Message(text="test", timestamp=time, user_id=1111)
         mid1 = 11
 
-        # u2 = User.signup("test2", "email2@email.com", "password", None)
-        # uid2 = 2222
-        # u2.id = uid2
+        u2 = User.signup("test2", "email2@email.com", "password", None)
+        uid2 = 2222
+        u2.id = uid2
 
         db.session.commit()
 
@@ -71,7 +73,8 @@ class MessageModelTestCase(TestCase):
         return res
 
     def test_create_mssg_success(self):
-        m2 = Message(text="test mssg", timestamp=None, user_id=1111)
+        time = datetime.now().astimezone()
+        m2 = Message(text="test mssg", timestamp=time, user_id=1111)
         m2.id = 11
         db.session.add(m2)
         db.session.commit()
@@ -87,7 +90,8 @@ class MessageModelTestCase(TestCase):
             db.session.commit()
 
     def test_fail_mssg(self):
-        m2 = Message(text=None, timestamp=None, user_id='1111')
+        time = datetime.now().astimezone()
+        m2 = Message(text=None, timestamp=time, user_id='1111')
         m2.id = 16
         db.session.add(m2)
         with self.assertRaises(exc.IntegrityError) as context:

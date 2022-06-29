@@ -1,7 +1,4 @@
 """SQLAlchemy models for Warbler."""
-
-from datetime import datetime
-from dateutil import tz
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import func
