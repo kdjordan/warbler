@@ -141,7 +141,9 @@ def list_users():
 def users_show(user_id):
     """Show user profile."""
    
-    user = User.query.get_or_404(user_id)
+    user = User.query.get(user_id)
+    if user is None:
+        return redirect('/')
 
     # snagging messages in order from the database;
     # user.messages won't be in order by default

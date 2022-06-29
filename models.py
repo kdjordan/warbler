@@ -1,6 +1,7 @@
 """SQLAlchemy models for Warbler."""
 
-from datetime import datetime
+from datetime import datetime, date
+from dateutil.tz import tzutc, tzlocal
 
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
@@ -173,6 +174,11 @@ class User(db.Model):
 class Message(db.Model):
     """An individual message ("warble")."""
 
+    @property
+    def friendly_date(self):
+        """Return nicely-formatted date."""
+        return self.timestamp.strftime("%a %b %-d  %Y, %-I:%M %p")
+       
     __tablename__ = 'messages'
 
     id = db.Column(
@@ -190,7 +196,6 @@ class Message(db.Model):
         nullable=False,
         default=datetime.utcnow(),
     )
-
     user_id = db.Column(
         db.Integer,
         db.ForeignKey('users.id', ondelete='CASCADE'),

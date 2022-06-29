@@ -34,7 +34,6 @@ $ cd into warbler
 **Make sure PostgreSQL is installed and running on your machine**
 $ psql
 $ CREATE DATABASE warbler
-$ CREATE DARTABASE warbler_test
 $ \q
 $ python3 seed.py
 $ python3 -m venv venv
@@ -47,8 +46,9 @@ $ flask run
 ## Testing  
 To test this application run the following commands :  
 ```
-$ python -m unittest test_user_model.py
-$ python -m unittest test_message_model.py
-$ FLASK_ENV=production python -m unittest test_message_views.py
-$ FLASK_ENV=production python -m unittest test_user_views.py
+$ CREATE DATABASE warbler_test
+$ python3 -m unittest test_user_model.py
+$ python3 -m unittest test_message_model.py
+$ FLASK_ENV=production python3 -m unittest test_message_views.py
+$ FLASK_ENV=production python3 -m unittest test_user_views.py
 ```
