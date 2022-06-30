@@ -46,7 +46,9 @@ $ flask run
 ## Testing  
 To test this application run the following commands :  
 ```
+$ psql
 $ CREATE DATABASE warbler_test
+$ \q
 $ python3 -m unittest test_user_model.py
 $ python3 -m unittest test_message_model.py
 $ FLASK_ENV=production python3 -m unittest test_message_views.py
